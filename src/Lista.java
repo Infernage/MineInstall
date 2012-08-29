@@ -11,6 +11,7 @@ import javax.swing.*;
 public class Lista extends javax.swing.JDialog {
     private SortedMap<String, Set<String>> file;
     private List<Fechas> ord;
+    private List<Fechas> ordenada;
     /**
      * Creates new form Lista
      */
@@ -23,14 +24,15 @@ public class Lista extends javax.swing.JDialog {
         }
         //Creamos una lista vacía para todos los nombres tratados
         ord = new ArrayList<Fechas>();
+        ordenada = new ArrayList<Fechas>();
         //Tratamos los nombres
         files();
         //Ordenamos la lista por versión más reciente
-        ordena();
+        ordenar();
         //Creamos el modelo del jList igual al de la lista ordenada
         DefaultListModel li = new DefaultListModel();
-        for (int i = 0; i < ord.size(); i++){
-            li.addElement(ord.get(i).toString());
+        for (int i = 0; i < ordenada.size(); i++){
+            li.addElement(ordenada.get(i).toString());
         }
         //Imponemos nuestro modelo
         jList1.setModel(li);
@@ -42,68 +44,19 @@ public class Lista extends javax.swing.JDialog {
         StringBuilder str = new StringBuilder().append(f.dia).append("_").append(f.mes).append("_").append(f.año).append("/").append(f.hora).append(";").append(f.minuto).append(";").append(f.segundo).append("-").append(f.mili);
         return str.toString();
     }
-    private void ordena(){
-        //Ordenamos según sea mayor
-        for (int cont = 0; cont < ord.size(); cont++){
-            //Cogemos un elemento y lo imponemos como el mínimo
-            Fechas min = ord.get(cont);
-            for (int i = cont + 1; i < ord.size(); i++){
-                //Vamos comparando cada elemento con el elegido para ver cual es mas reciente
-                Fechas rec = ord.get(i);
-                int A = Integer.parseInt(min.año);
-                int B = Integer.parseInt(rec.año);
-                if (A < B){
-                    ord.set(i, min);
-                    ord.set(cont, rec);
-                    i = ord.size();
-                } else if (A == B){
-                    A = Integer.parseInt(min.mes);
-                    B = Integer.parseInt(rec.mes);
-                    if (B > A){
-                        ord.set(i, min);
-                        ord.set(cont, rec);
-                        i = ord.size();
-                    } else if (A == B){
-                        A = Integer.parseInt(min.dia);
-                        B = Integer.parseInt(rec.dia);
-                        if (B > A){
-                            ord.set(i, min);
-                            ord.set(cont, rec);
-                            i = ord.size();
-                        } else if (A == B){
-                            A = Integer.parseInt(min.hora);
-                            B = Integer.parseInt(rec.hora);
-                            if (B > A){
-                                ord.set(i, min);
-                                ord.set(cont, rec);
-                                i = ord.size();
-                            } else if (A == B){
-                                A = Integer.parseInt(min.minuto);
-                                B = Integer.parseInt(rec.minuto);
-                                if (B > A){
-                                    ord.set(i, min);
-                                    ord.set(cont, rec);
-                                    i = ord.size();
-                                } else if (A == B){
-                                    A = Integer.parseInt(min.segundo);
-                                    B = Integer.parseInt(rec.segundo);
-                                    if (B > A){
-                                        ord.set(i, min);
-                                        ord.set(cont, rec);
-                                        i = ord.size();
-                                    } else if (A == B){
-                                        A = Integer.parseInt(min.mili);
-                                        B = Integer.parseInt(rec.mili);
-                                        ord.set(i, min);
-                                        ord.set(cont, rec);
-                                        i = ord.size();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+    private void ordenar(){
+        //Cogemos el primer elemento
+        Fechas fecha = ord.get(0);
+        for (int i = 1; i < ord.size(); i++){
+            if (!fecha.compare(ord.get(i))){ //Si el elemento actual es más reciente, lo cogemos
+                fecha = ord.get(i);
             }
+        }
+        //Cogemos el elemento más reciente y lo removemos de la otra lista
+        ordenada.add(fecha);
+        ord.remove(fecha);
+        if (!ord.isEmpty()){
+            ordenar();
         }
     }
     private void files(){
