@@ -64,6 +64,7 @@ public class Vista extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
 
+        setTitle("Instalador Minecraft 1.2.5");
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -233,7 +234,9 @@ public class Vista extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Vista().setVisible(true);
+                Vista vist = new Vista();
+                vist.setLocationRelativeTo(null);
+                vist.setVisible(true);
             }
         });
     }
