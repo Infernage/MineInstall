@@ -86,8 +86,6 @@ public class Unworker extends SwingWorker<Integer, Integer>{
                 if(!exec.exists()){//Comprobamos si existe acceso directo
                     exec.createNewFile();
                     PrintWriter pw = new PrintWriter (exec);
-                    pw.print("echo Loading Minecraft...");
-                    pw.println();
                     pw.print("@echo off");
                     pw.println();
                     pw.print("java -jar " + System.getProperty("user.home") + "\\AppData\\Roaming\\.minecraft\\RUN.jar");
@@ -123,8 +121,6 @@ public class Unworker extends SwingWorker<Integer, Integer>{
                 if(!exec.exists()){//Comprobamos si existe acceso directo
                     exec.createNewFile();
                     PrintWriter pw = new PrintWriter (exec);
-                    pw.print("echo Loading Minecraft...");
-                    pw.println();
                     pw.print("@echo off");
                     pw.println();
                     pw.print("java -jar " + System.getProperty("user.home") + "\\AppData\\Roaming\\.minecraft\\RUN.jar");
