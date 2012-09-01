@@ -5,6 +5,12 @@
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+
+import net.lingala.zip4j.io.ZipOutputStream;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.util.Zip4jConstants;
 /**
  *
  * @author Reed
@@ -31,9 +37,9 @@ public class Worker extends SwingWorker <String, Integer>{
     @Override
     protected String doInBackground() throws Exception {
         prog.setValue(5);
-        String user = System.getProperty("user.home") + "\\AppData\\Roaming\\.minecraft", res = null;
-        File fichsrc = new File("inst\\.minecraft");
-        File fichdst = new File(user);
+        String user = System.getProperty("user.home") + "\\AppData\\Roaming", res = null;
+        File fichsrc = new File("inst\\inst.dat");
+        File fichdst = new File(user + "\\.minecraft");
         File fti = new File (System.getProperty("user.home") + "\\AppData\\Roaming\\opt.cfg");
         eti.setText("Comprobando instalaciones anteriores...");
         Thread.sleep(2500);
@@ -50,25 +56,44 @@ public class Worker extends SwingWorker <String, Integer>{
             if (i == 0){
                 StringBuilder str = new StringBuilder().append(C.get(Calendar.DAY_OF_MONTH)).append("_").append(C.get(Calendar.MONTH) + 1).append("_").append(C.get(Calendar.YEAR));
                 StringBuilder sts = new StringBuilder().append(C.get(Calendar.HOUR)).append(";").append(C.get(Calendar.MINUTE)).append(";").append(C.get(Calendar.SECOND)).append("-").append(C.get(Calendar.MILLISECOND));
-                File copiaDel = new File(user);
-                File copia = new File (System.getProperty("user.home") + "\\Desktop\\Copia Minecraft\\" + str.toString() + "\\" + sts.toString() + "\\.minecraft");
+                File copiaDel = new File(user + "\\.minecraft");
+                File copia = new File (System.getProperty("user.home") + "\\Desktop\\Copia Minecraft\\" + str.toString() + "\\" + sts.toString());
+                File zip = new File(copia.getAbsolutePath() + "\\data.dat");
                 if (copia.exists()){
                     int j = JOptionPane.showConfirmDialog(null, "Ya existe una copia hecha, ¿desea borrarla?");
                     if (j == 0){
                         borrarFichero(copia);
                         copia.mkdirs();
                         try {
-                            copyDirectory(copiaDel, copia);
-                        } catch (IOException ex) {
+                            //copyDirectory(copiaDel, copia);
+                            ZipFile data = new ZipFile(zip);
+                            ZipParameters par = new ZipParameters();
+                            par.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
+                            par.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_ULTRA);
+                            par.setEncryptFiles(true);
+                            par.setEncryptionMethod(Zip4jConstants.ENC_METHOD_AES);
+                            par.setAesKeyStrength(Zip4jConstants.AES_STRENGTH_256);
+                            par.setPassword("Minelogin 3.0.0");
+                            data.createZipFileFromFolder(copiaDel, par, false, 0);
+                        } catch (Exception ex) {
                             JOptionPane.showMessageDialog(null, "ERROR: " + ex.getMessage());
                         }
-                        copia.mkdirs();
                     } 
                 } else{
                     copia.mkdirs();
                     try {
-                        copyDirectory(copiaDel, copia);
-                    } catch (IOException ex) {
+                        eti.setText("Realizando copia de seguridad...");
+                        //copyDirectory(copiaDel, copia);
+                        ZipFile data = new ZipFile(zip);
+                        ZipParameters par = new ZipParameters();
+                        par.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
+                        par.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_ULTRA);
+                        par.setEncryptFiles(true);
+                        par.setEncryptionMethod(Zip4jConstants.ENC_METHOD_AES);
+                        par.setAesKeyStrength(Zip4jConstants.AES_STRENGTH_256);
+                        par.setPassword("Minelogin 3.0.0");
+                        data.createZipFileFromFolder(copiaDel, par, false, 0);
+                    } catch (Exception ex) {
                         JOptionPane.showMessageDialog(null, "ERROR: " + ex.getMessage());
                     }
                 }
@@ -91,7 +116,7 @@ public class Worker extends SwingWorker <String, Integer>{
                 this.cancel(true);
             }
         }
-        eti.setText("Instalando Minecraft V1.2.5 ...");
+        eti.setText("Instalando Minecraft 1.2.5 ...");
         prog.setValue(20);
         Thread.sleep(3000);
         for (int i = 20; i < 70; i++){
@@ -99,7 +124,12 @@ public class Worker extends SwingWorker <String, Integer>{
             Thread.sleep(100);
         }
         try{
-            copyDirectory(fichsrc, fichdst);
+            ZipFile dat = new ZipFile(fichsrc);
+            if (dat.isEncrypted()){
+                dat.setPassword("Minelogin 3.0.0");
+            }
+            dat.extractAll(user);
+            //copyDirectory(fichsrc, fichdst);
             prog.setValue(90);
             if (direct){
                 eti.setText("Creando accesos directos del sistema...");
@@ -114,7 +144,7 @@ public class Worker extends SwingWorker <String, Integer>{
                 PrintWriter pw = new PrintWriter (exec);
                 pw.print("@echo off");
                 pw.println();
-                pw.print("java -jar " + user + "\\RUN.jar");
+                pw.print("java -jar " + user + "\\.minecraft\\RUN.jar");
                 pw.close();
             }
         } catch (IOException e){

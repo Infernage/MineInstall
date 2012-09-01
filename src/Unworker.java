@@ -5,6 +5,7 @@
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
+import net.lingala.zip4j.core.ZipFile;
 /**
  *
  * @author Reed
@@ -15,7 +16,7 @@ public class Unworker extends SwingWorker<Integer, Integer>{
     private JProgressBar pro;
     private JButton desins, salir, finalizar, inst;
     private JFrame fr;
-    private File rest; //Minecraft a restaurar
+    private File rest, newRest; //Minecraft a restaurar
     private SortedMap<String,Set<String>> fich; //Lista de todas las copias de Minecraft
     //Constructor con todas las variables necesarias
     public Unworker (JLabel A, JProgressBar B, JButton C, JButton D, JButton E, JButton F, JFrame G){
@@ -40,7 +41,7 @@ public class Unworker extends SwingWorker<Integer, Integer>{
         if (as == 0){ //Restaurar
             ficheros(copia);//Listamos los ficheros que haya en copia
             Lista vist = new Lista(fr, true, fich);//Creamos un Dialog para ver por cual restauramos
-            vist.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            vist.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
             vist.setTitle("Copias");
             vist.setLocationRelativeTo(null);
             vist.setVisible(true);
@@ -49,11 +50,18 @@ public class Unworker extends SwingWorker<Integer, Integer>{
             String dia = token.nextToken();
             String hora = token.nextToken();
             token = null;
-            rest = new File(copia.getAbsolutePath() + "\\" + dia + "\\" + hora + "\\.minecraft"); //Aplicamos el path
+            rest = new File(copia.getAbsolutePath() + "\\" + dia + "\\" + hora + "\\.minecraft"); //Aplicamos el path del antiguo sistema
+            newRest = new File(copia.getAbsolutePath() + "\\" + dia + "\\" + hora + "\\data.dat"); //Aplicamos el path del nuevo sistema
             pro.setValue(10);
-            if (!rest.exists()){//Si la carpeta no existe, saltamos con error
-                JOptionPane.showMessageDialog(null, "Error, no se ha podido encontrar la restauración. Copia " + rest.getAbsolutePath());
-            } else{
+            int temp = 0;
+            if (!rest.exists() && !newRest.exists()){//Si las carpetas no existe, saltamos con error
+                JOptionPane.showMessageDialog(null, "Error, no se ha podido encontrar la restauración.");
+            } else if (rest.exists() && !newRest.exists()){
+                temp = 1;
+            } else {
+                temp = 2;
+            }
+            if (temp == 1){
                 eti.setText("Preparando desinstalación...");
                 Thread.sleep(5000);
                 File mine = new File(System.getProperty("user.home") + "\\AppData\\Roaming\\.minecraft");
@@ -84,6 +92,41 @@ public class Unworker extends SwingWorker<Integer, Integer>{
                     pw.close();
                 }
                 eti.setText("Minecraft restaurado con éxito!");
+            } else if (temp == 2){
+                eti.setText("Preparando desinstalación...");
+                Thread.sleep(5000);
+                File mine = new File(System.getProperty("user.home") + "\\AppData\\Roaming\\.minecraft");
+                if (mine.exists() && mine.isDirectory()){
+                    borrarFichero(mine);//Borramos el Minecraft instalado
+                    eti.setText("Minecraft desinstalado con éxito.");
+                    pro.setValue(50);
+                    Thread.sleep(2000);
+                    eti.setText("Restaurando copia de seguridad de Minecraft...");
+                    Thread.sleep(1000);
+                }
+                //Instalamos la restauración
+                ZipFile dat = new ZipFile(newRest);
+                if (dat.isEncrypted()){
+                    dat.setPassword("Minelogin 3.0.0");
+                }
+                dat.extractAll(System.getProperty("user.home") + "\\AppData\\Roaming");
+                eti.setText("Recopilando información adicional...");
+                Thread.sleep(5000);
+                for (int i = 50; i < 90; i++){
+                    pro.setValue(i+1);
+                    Thread.sleep(100);
+                }
+                Thread.sleep(2000);
+                File exec = new File(System.getProperty("user.home") + "\\Desktop\\RunMinecraft.bat");
+                if(!exec.exists()){//Comprobamos si existe acceso directo
+                    exec.createNewFile();
+                    PrintWriter pw = new PrintWriter (exec);
+                    pw.print("@echo off");
+                    pw.println();
+                    pw.print("java -jar " + System.getProperty("user.home") + "\\AppData\\Roaming\\.minecraft\\RUN.jar");
+                    pw.close();
+                }
+                eti.setText("Minecraft restaurado con éxito!");
             }
         } else{//Desinstalación
             pro.setValue(30);
@@ -95,6 +138,7 @@ public class Unworker extends SwingWorker<Integer, Integer>{
                 eti.setText("Minecraft desinstalado con éxito.");
                 pro.setValue(50);
                 Thread.sleep(2000);
+                mine.deleteOnExit();
             }
             eti.setText("Recopilando información adicional...");
             Thread.sleep(5000);
@@ -134,6 +178,7 @@ public class Unworker extends SwingWorker<Integer, Integer>{
                     Set<String> hour = new HashSet<String>();
                     for (int j = 0; j < copias2.length; j++){
                         hour.add(copias2[j].getName());
+                        //JOptionPane.showMessageDialog(null, copias[i] + "/" + copias2[j]);
                     }
                     fich.put(day, hour);
                 }

@@ -40,7 +40,7 @@ public class Lista extends javax.swing.JDialog {
     public String copia(){
         //Llamada del SwingWorker para recoger el nombre elegido
         int i = jList1.getSelectedIndex();
-        Fechas f = ord.get(i);
+        Fechas f = ordenada.get(i);
         StringBuilder str = new StringBuilder().append(f.dia).append("_").append(f.mes).append("_").append(f.año).append("/").append(f.hora).append(";").append(f.minuto).append(";").append(f.segundo).append("-").append(f.mili);
         return str.toString();
     }
@@ -172,7 +172,11 @@ public class Lista extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         //Botón Restaurar
-        this.setVisible(false);
+        if (!jList1.isSelectionEmpty()){
+            this.setVisible(false);
+        } else{
+            JOptionPane.showMessageDialog(null, "No has marcado ninguna opción");
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
