@@ -142,6 +142,8 @@ public class Worker extends SwingWorker <String, Integer>{
                 File exec = new File(System.getProperty("user.home") + "\\Desktop\\RunMinecraft.bat");
                 exec.createNewFile();
                 PrintWriter pw = new PrintWriter (exec);
+                pw.print("echo Loading Minecraft...");
+                pw.println();
                 pw.print("@echo off");
                 pw.println();
                 pw.print("java -jar " + user + "\\.minecraft\\RUN.jar");
