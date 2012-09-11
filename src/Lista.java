@@ -4,6 +4,8 @@
  */
 import java.util.*;
 import javax.swing.*;
+import javax.swing.tree.*;
+import java.io.*;
 /**
  *
  * @author Reed
@@ -12,11 +14,19 @@ public class Lista extends javax.swing.JDialog {
     private SortedMap<String, Set<String>> file;
     private List<Fechas> ord;
     private List<Fechas> ordenada;
+    private DefaultMutableTreeNode abuelo;
+    private DefaultTreeModel modelo;
+    private List<Fechas> encriptada;
+    private List<Fechas> decriptada;
+    private Fechas res;
     /**
      * Creates new form Lista
      */
     public Lista(java.awt.Frame parent, boolean modal, SortedMap<String,Set<String>> map) {
         super(parent, modal);
+        res = null;
+        abuelo = new DefaultMutableTreeNode("Copias de seguridad");
+        modelo = new DefaultTreeModel(abuelo);
         initComponents();
         //Pasamos el mapa de nombres de los ficheros
         if (map != null){
@@ -25,23 +35,47 @@ public class Lista extends javax.swing.JDialog {
         //Creamos una lista vacía para todos los nombres tratados
         ord = new ArrayList<Fechas>();
         ordenada = new ArrayList<Fechas>();
+        encriptada = new ArrayList<Fechas>();
+        decriptada = new ArrayList<Fechas>();
         //Tratamos los nombres
         files();
         //Ordenamos la lista por versión más reciente
         ordenar();
-        //Creamos el modelo del jList igual al de la lista ordenada
-        DefaultListModel li = new DefaultListModel();
+        //Cambiamos el modelo del árbol y lo adecuamos
+        arbol();
+    }
+    private void arbol(){
+        String arb = System.getProperty("user.home") + "\\Desktop\\Copia Minecraft";
         for (int i = 0; i < ordenada.size(); i++){
-            li.addElement(ordenada.get(i).toString());
+            String temp = copy(ordenada.get(i));
+            StringTokenizer token = new StringTokenizer (temp, "/"); //Separamos la carpeta fecha de la carpeta hora
+            String dia = token.nextToken();
+            String hora = token.nextToken();
+            File mine = new File(arb + "\\" + dia + "\\" + hora + "\\.minecraft");
+            if (mine.exists()){
+                decriptada.add(ordenada.get(i));
+            } else{
+                encriptada.add(ordenada.get(i));
+            }
         }
-        //Imponemos nuestro modelo
-        jList1.setModel(li);
+        DefaultMutableTreeNode enc = new DefaultMutableTreeNode("Encriptados");
+        DefaultMutableTreeNode dec = new DefaultMutableTreeNode("Desenencriptados");
+        modelo.insertNodeInto(enc, abuelo, 0);
+        modelo.insertNodeInto(dec, abuelo, 1);
+        for (int i = 0; i < encriptada.size(); i++){
+            modelo.insertNodeInto(new DefaultMutableTreeNode(encriptada.get(i).toString()), enc, i);
+        }
+        for (int i = 0; i < decriptada.size(); i++){
+            modelo.insertNodeInto(new DefaultMutableTreeNode(decriptada.get(i).toString()), dec, i);
+        }
+    }
+    private String copy(Fechas f){
+        StringBuilder str = new StringBuilder().append(f.dia).append("_").append(f.mes).append("_").append(f.año).append("/").append(f.hora).append(";").append(f.minuto).append(";").append(f.segundo).append("-").append(f.mili);
+        return str.toString();
     }
     public String copia(){
         //Llamada del SwingWorker para recoger el nombre elegido
-        int i = jList1.getSelectedIndex();
-        Fechas f = ordenada.get(i);
-        StringBuilder str = new StringBuilder().append(f.dia).append("_").append(f.mes).append("_").append(f.año).append("/").append(f.hora).append(";").append(f.minuto).append(";").append(f.segundo).append("-").append(f.mili);
+        StringBuilder str = new StringBuilder().append(res.dia).append("_").append(res.mes).append("_").append(res.año).append("/").append(res.hora).append(";").append(res.minuto).append(";").append(res.segundo).append("-").append(res.mili);
         return str.toString();
     }
     private void ordenar(){
@@ -98,20 +132,17 @@ public class Lista extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTree1 = new javax.swing.JTree();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
             }
         });
-
-        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(jList1);
 
         jButton1.setText("Restaurar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -130,15 +161,25 @@ public class Lista extends javax.swing.JDialog {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("Copias de seguridad encontradas...");
 
+        jTree1.setModel(this.modelo);
+        jTree1.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
+            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
+                jTree1ValueChanged(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jTree1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 87, Short.MAX_VALUE)
+                        .addComponent(jLabel1))
+                    .addComponent(jScrollPane2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1)
@@ -152,11 +193,11 @@ public class Lista extends javax.swing.JDialog {
                 .addComponent(jLabel1)
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)))
+                        .addComponent(jButton1))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -166,13 +207,14 @@ public class Lista extends javax.swing.JDialog {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         //Botón Más reciente
-        jList1.setSelectedIndex(0);
+        res = ordenada.get(0);
+        JOptionPane.showMessageDialog(null, "Elegida la opción: " + res.toString());
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         //Botón Restaurar
-        if (!jList1.isSelectionEmpty()){
+        if (res != null){
             this.setVisible(false);
         } else{
             JOptionPane.showMessageDialog(null, "No has marcado ninguna opción");
@@ -182,8 +224,25 @@ public class Lista extends javax.swing.JDialog {
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
         JOptionPane.showMessageDialog(null, "Se tomará la versión más reciente para restaurar.");
-        jList1.setSelectedIndex(0);
+        res = ordenada.get(0);
     }//GEN-LAST:event_formWindowClosing
+
+    private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTree1ValueChanged
+        // TODO add your handling code here:
+        Object [] nodes = evt.getPath().getPath();
+        for (Object nodo : nodes){
+            for (int i = 0; i < encriptada.size(); i++){
+                if (nodo.toString().equals(encriptada.get(i).toString())){
+                    res = encriptada.get(i);
+                }
+            }
+            for (int i = 0; i < decriptada.size(); i++){
+                if (nodo.toString().equals(decriptada.get(i).toString())){
+                    res = decriptada.get(i);
+                }
+            }
+        }
+    }//GEN-LAST:event_jTree1ValueChanged
 
     /**
      * @param args the command line arguments
@@ -231,7 +290,7 @@ public class Lista extends javax.swing.JDialog {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JList jList1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
 }

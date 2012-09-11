@@ -15,7 +15,7 @@ public class Cambios extends javax.swing.JDialog {
     public Cambios(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        jTextArea1.setText("Instalador Ver 3.0.0\n-Cambiada interfaz del Login.\n-Quitados los sonidos de los botones Recordar datos y Cambiar contraseña.\n-Agregado recordar contraseña.\n-Ahora, al pulsar en Recordar datos, hará falta introducir la palabra secreta para ver el nombre de usuario y la contraseña.\n-Arreglado error por el que no se modificaba correctamente la contraseña.\n-Agregado sistema de desinstalación con elección de restauar copia de seguridad.\n-Arreglado el uso de RAM al elegir con el botón ¡Jugar!.\n-Añadida encriptación a la instalación y a la restauración.\n.-Cambiado la interfaz del instalador.\n-Añadido icono de Minecraft.");
+        jTextArea1.setText("Instalador 3.1.0\n-Cambiado Changelog. Ahora no hay que pulsar el botón para acceder a la ventana.\n-Actualizado FAQ.\n-Cambiado el funcionamiento del instalador.\n-De vuelta el actualizador! Ya no hay necesidad de estar atento a la página para descargar la última versión.");
     }
 
     /**

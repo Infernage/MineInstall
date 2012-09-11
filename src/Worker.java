@@ -6,9 +6,6 @@ import javax.swing.*;
 import java.io.*;
 import java.util.*;
 import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
-
-import net.lingala.zip4j.io.ZipOutputStream;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
 /**
@@ -55,7 +52,7 @@ public class Worker extends SwingWorker <String, Integer>{
             int i = JOptionPane.showConfirmDialog(null, "Minecraft ya está instalado en su sistema. ¿Desea desinstalarlo?\n(Se realiza copia de seguridad)");
             if (i == 0){
                 StringBuilder str = new StringBuilder().append(C.get(Calendar.DAY_OF_MONTH)).append("_").append(C.get(Calendar.MONTH) + 1).append("_").append(C.get(Calendar.YEAR));
-                StringBuilder sts = new StringBuilder().append(C.get(Calendar.HOUR)).append(";").append(C.get(Calendar.MINUTE)).append(";").append(C.get(Calendar.SECOND)).append("-").append(C.get(Calendar.MILLISECOND));
+                StringBuilder sts = new StringBuilder().append(C.get(Calendar.HOUR_OF_DAY)).append(";").append(C.get(Calendar.MINUTE)).append(";").append(C.get(Calendar.SECOND)).append("-").append(C.get(Calendar.MILLISECOND));
                 File copiaDel = new File(user + "\\.minecraft");
                 File copia = new File (System.getProperty("user.home") + "\\Desktop\\Copia Minecraft\\" + str.toString() + "\\" + sts.toString());
                 File zip = new File(copia.getAbsolutePath() + "\\data.dat");
