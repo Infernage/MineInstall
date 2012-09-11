@@ -6,6 +6,9 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.tree.*;
 import java.io.*;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.util.Zip4jConstants;
 /**
  *
  * @author Reed
@@ -15,6 +18,8 @@ public class Lista extends javax.swing.JDialog {
     private List<Fechas> ord;
     private List<Fechas> ordenada;
     private DefaultMutableTreeNode abuelo;
+    private DefaultMutableTreeNode enc;
+    private DefaultMutableTreeNode dec;
     private DefaultTreeModel modelo;
     private List<Fechas> encriptada;
     private List<Fechas> decriptada;
@@ -27,6 +32,8 @@ public class Lista extends javax.swing.JDialog {
         res = null;
         abuelo = new DefaultMutableTreeNode("Copias de seguridad");
         modelo = new DefaultTreeModel(abuelo);
+        enc = new DefaultMutableTreeNode("Encriptados");
+        dec = new DefaultMutableTreeNode("Desenencriptados");
         initComponents();
         //Pasamos el mapa de nombres de los ficheros
         if (map != null){
@@ -44,6 +51,29 @@ public class Lista extends javax.swing.JDialog {
         //Cambiamos el modelo del árbol y lo adecuamos
         arbol();
     }
+    private void update(){
+        enc.removeAllChildren();
+        dec.removeAllChildren();
+        modelo.removeNodeFromParent(dec);
+        modelo.removeNodeFromParent(enc);
+        modelo.reload();
+        initialiteTree();
+        modelo.reload();
+    }
+    private void initialiteTree(){
+        if (encriptada.size() > 0){
+            modelo.insertNodeInto(enc, abuelo, 0);
+        }
+        if (decriptada.size() > 0){
+            modelo.insertNodeInto(dec, abuelo, 1);
+        }
+        for (int i = 0; i < encriptada.size(); i++){
+            modelo.insertNodeInto(new DefaultMutableTreeNode(encriptada.get(i).toString()), enc, i);
+        }
+        for (int i = 0; i < decriptada.size(); i++){
+            modelo.insertNodeInto(new DefaultMutableTreeNode(decriptada.get(i).toString()), dec, i);
+        }
+    }
     private void arbol(){
         String arb = System.getProperty("user.home") + "\\Desktop\\Copia Minecraft";
         for (int i = 0; i < ordenada.size(); i++){
@@ -58,16 +88,7 @@ public class Lista extends javax.swing.JDialog {
                 encriptada.add(ordenada.get(i));
             }
         }
-        DefaultMutableTreeNode enc = new DefaultMutableTreeNode("Encriptados");
-        DefaultMutableTreeNode dec = new DefaultMutableTreeNode("Desenencriptados");
-        modelo.insertNodeInto(enc, abuelo, 0);
-        modelo.insertNodeInto(dec, abuelo, 1);
-        for (int i = 0; i < encriptada.size(); i++){
-            modelo.insertNodeInto(new DefaultMutableTreeNode(encriptada.get(i).toString()), enc, i);
-        }
-        for (int i = 0; i < decriptada.size(); i++){
-            modelo.insertNodeInto(new DefaultMutableTreeNode(decriptada.get(i).toString()), dec, i);
-        }
+        initialiteTree();
     }
     private String copy(Fechas f){
         StringBuilder str = new StringBuilder().append(f.dia).append("_").append(f.mes).append("_").append(f.año).append("/").append(f.hora).append(";").append(f.minuto).append(";").append(f.segundo).append("-").append(f.mili);
@@ -122,6 +143,16 @@ public class Lista extends javax.swing.JDialog {
             }
         }
     }
+    private void borrarFichero (File fich){
+        File[] ficheros = fich.listFiles();
+        for (int x = 0; x < ficheros.length; x++){
+            if (ficheros[x].isDirectory()){
+                borrarFichero(ficheros[x]);
+            }
+            ficheros[x].delete();
+        }
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -137,6 +168,9 @@ public class Lista extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -169,6 +203,27 @@ public class Lista extends javax.swing.JDialog {
         });
         jScrollPane2.setViewportView(jTree1);
 
+        jButton3.setText("Encriptar");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Desencriptar");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("Salir");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -181,9 +236,12 @@ public class Lista extends javax.swing.JDialog {
                         .addComponent(jLabel1))
                     .addComponent(jScrollPane2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -192,11 +250,17 @@ public class Lista extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(14, 14, 14)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1))
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton5))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -244,6 +308,93 @@ public class Lista extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jTree1ValueChanged
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        if (res == null){
+            JOptionPane.showMessageDialog(null, "No se ha elegido ninguna opción");
+        }else{
+            Fechas fec = res;
+            StringTokenizer token = new StringTokenizer(copia(), "/");
+            String day = token.nextToken();
+            String hour = token.nextToken();
+            String install = System.getProperty("user.home") + "\\Desktop\\Copia Minecraft\\" + day + "\\" + hour;
+            try {
+                File zi = new File(install + "\\data.dat");
+                if (zi.exists()){
+                    throw new Exception("Ya está encriptado");
+                }
+                ZipFile zip = new ZipFile(zi);
+                File mine = new File(install + "\\.minecraft");
+                ZipParameters par = new ZipParameters();
+                par.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
+                par.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_ULTRA);
+                par.setEncryptFiles(true);
+                par.setEncryptionMethod(Zip4jConstants.ENC_METHOD_AES);
+                par.setAesKeyStrength(Zip4jConstants.AES_STRENGTH_256);
+                par.setPassword("Minelogin 3.0.0");
+                zip.createZipFileFromFolder(mine, par, false, 0);
+                borrarFichero(mine);
+                mine.delete();
+                decriptada.remove(fec);
+                int i = 0;
+                for (; i < encriptada.size(); i++){
+                    if (!encriptada.get(i).compare(fec)){
+                        encriptada.add(i, fec);
+                        break;
+                    }
+                }
+                if (i == encriptada.size()){
+                    encriptada.add(fec);
+                }
+                update();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        if (res != null){
+            Fechas fec = res;
+            try {
+                StringTokenizer token = new StringTokenizer(copia(), "/");
+                String day = token.nextToken();
+                String hour = token.nextToken();
+                File zi = new File(System.getProperty("user.home") + "\\Desktop\\Copia Minecraft\\" + day + "\\" + hour + "\\data.dat");
+                File mine = new File(System.getProperty("user.home") + "\\Desktop\\Copia Minecraft\\" + day + "\\" + hour + "\\.minecraft");
+                if (mine.exists()){
+                    throw new Exception("Ya está desencriptado");
+                }
+                ZipFile zip = new ZipFile(zi.getAbsolutePath());
+                zip.setPassword("Minelogin 3.0.0");
+                zip.extractAll(System.getProperty("user.home") + "\\Desktop\\Copia Minecraft\\" + day + "\\" + hour);
+                zi.delete();
+                encriptada.remove(fec);
+                int i = 0;
+                for (; i < decriptada.size(); i++){
+                    if (!decriptada.get(i).compare(fec)){
+                        decriptada.add(i, fec);
+                        break;
+                    }
+                }
+                if (i == decriptada.size()){
+                    decriptada.add(fec);
+                }
+                update();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "No se ha elegido ninguna opción");
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -289,6 +440,9 @@ public class Lista extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTree jTree1;

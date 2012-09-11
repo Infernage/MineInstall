@@ -14,18 +14,16 @@ public class Unworker extends SwingWorker<Integer, Integer>{
     //Clase de desinstalación
     private JLabel eti;
     private JProgressBar pro;
-    private JButton desins, salir, finalizar, inst;
+    private JButton salir, finalizar;
     private JFrame fr;
     private File rest, newRest; //Minecraft a restaurar
     private SortedMap<String,Set<String>> fich; //Lista de todas las copias de Minecraft
     //Constructor con todas las variables necesarias
-    public Unworker (JLabel A, JProgressBar B, JButton C, JButton D, JButton E, JButton F, JFrame G){
+    public Unworker (JLabel A, JProgressBar B, JButton C, JButton D, JFrame G){
         eti = A;
         pro = B;
         finalizar = C;
         salir = D;
-        desins = E;
-        inst = F;
         fr = G;
         pro.setValue(0);
         eti.setText("Recopilando información de instalaciones anteriores...");
@@ -165,8 +163,6 @@ public class Unworker extends SwingWorker<Integer, Integer>{
         finalizar.setVisible(true);
         pro.setValue(100);
         salir.setVisible(false);
-        desins.setVisible(false);
-        inst.setVisible(false);
         fr.setVisible(true);
     }
     //Método para listar los ficheros copia
@@ -182,7 +178,6 @@ public class Unworker extends SwingWorker<Integer, Integer>{
                     Set<String> hour = new HashSet<String>();
                     for (int j = 0; j < copias2.length; j++){
                         hour.add(copias2[j].getName());
-                        //JOptionPane.showMessageDialog(null, copias[i] + "/" + copias2[j]);
                     }
                     fich.put(day, hour);
                 }

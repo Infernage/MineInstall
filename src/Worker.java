@@ -15,19 +15,17 @@ import net.lingala.zip4j.util.Zip4jConstants;
 public class Worker extends SwingWorker <String, Integer>{
     private JLabel eti;
     private JProgressBar prog;
-    private JButton bot, bot1, bot2, bot3;
+    private JButton bot, bot1;
     private boolean direct, exito = true;
     private Calendar C;
     private JFrame fr;
     //Constructor del SwingWorker
-    public Worker (JLabel lab, JProgressBar pro, JButton boton, JButton boton1, JButton boton2, boolean temp, JButton boton3){
+    public Worker (JLabel lab, JProgressBar pro, JButton boton, JButton boton1, boolean temp){
         eti = lab;
         prog = pro;
         bot = boton;
         bot1 = boton1;
-        bot2 = boton2;
         direct = temp;
-        bot3 = boton3;
         C = new GregorianCalendar();
     }
     //Método cuando se produce el this.execute()
@@ -170,8 +168,6 @@ public class Worker extends SwingWorker <String, Integer>{
             bot.setEnabled(true);
             prog.setValue(100);
             bot1.setVisible(false);
-            bot2.setVisible(false);
-            bot3.setVisible(false);
         } else{
             eti.setText("Minecraft no ha podido ser instalado.");
         }
