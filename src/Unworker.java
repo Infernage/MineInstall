@@ -35,7 +35,7 @@ public class Unworker extends SwingWorker<Integer, Integer>{
         //Cogemos la base de datos de las copias de seguridad
         File copia = new File(System.getProperty("user.home") + "\\Desktop\\Copia Minecraft");
         //Preguntamos si desea restaurar o desinstalar
-        int as = JOptionPane.showConfirmDialog(null, "¿Desea restaurar una copia realizada anteriormente?");
+        int as = JOptionPane.showConfirmDialog(null, "¿Desea restaurar o modificar una copia realizada anteriormente?");
         if (as == 0){ //Restaurar
             ficheros(copia);//Listamos los ficheros que haya en copia
             Lista vist = new Lista(fr, true, fich);//Creamos un Dialog para ver por cual restauramos

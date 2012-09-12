@@ -35,6 +35,9 @@ public class Lista extends javax.swing.JDialog {
         enc = new DefaultMutableTreeNode("Encriptados");
         dec = new DefaultMutableTreeNode("Desenencriptados");
         initComponents();
+        TreeSelectionModel mod = jTree1.getSelectionModel();
+        mod.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        jTree1.setSelectionModel(mod);
         //Pasamos el mapa de nombres de los ficheros
         if (map != null){
             file = map;
@@ -171,6 +174,10 @@ public class Lista extends javax.swing.JDialog {
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -178,14 +185,18 @@ public class Lista extends javax.swing.JDialog {
             }
         });
 
+        jButton1.setIcon(new javax.swing.ImageIcon("C:\\Archivos\\Minecraft\\150-iconos-png-2\\150-iconos-png\\24-arrow-back.png")); // NOI18N
         jButton1.setText("Restaurar");
+        jButton1.setToolTipText("Restaurar elemento seleccionado");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
+        jButton2.setIcon(new javax.swing.ImageIcon("C:\\Archivos\\Minecraft\\150-iconos-png-2\\150-iconos-png\\24-arrow-first.png")); // NOI18N
         jButton2.setText("Más reciente");
+        jButton2.setToolTipText("Seleccionar elemento más reciente");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -203,14 +214,18 @@ public class Lista extends javax.swing.JDialog {
         });
         jScrollPane2.setViewportView(jTree1);
 
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/24-security-lock.png"))); // NOI18N
         jButton3.setText("Encriptar");
+        jButton3.setToolTipText("Encriptar");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
 
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/24-security-lock-open.png"))); // NOI18N
         jButton4.setText("Desencriptar");
+        jButton4.setToolTipText("Desencriptar");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -218,9 +233,28 @@ public class Lista extends javax.swing.JDialog {
         });
 
         jButton5.setText("Salir");
+        jButton5.setToolTipText("Salir de la aplicación");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
+            }
+        });
+
+        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/24-em-cross.png"))); // NOI18N
+        jButton6.setText("Eliminar");
+        jButton6.setToolTipText("Eliminar");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
+        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/24-message-warn.png"))); // NOI18N
+        jButton7.setText("Borrar todo");
+        jButton7.setToolTipText("Eliminar todo");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
             }
         });
 
@@ -232,7 +266,7 @@ public class Lista extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 87, Short.MAX_VALUE)
+                        .addGap(0, 59, Short.MAX_VALUE)
                         .addComponent(jLabel1))
                     .addComponent(jScrollPane2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -241,7 +275,11 @@ public class Lista extends javax.swing.JDialog {
                     .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSeparator1)
+                    .addComponent(jSeparator2))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -252,16 +290,24 @@ public class Lista extends javax.swing.JDialog {
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4)
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton5))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -287,12 +333,14 @@ public class Lista extends javax.swing.JDialog {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
+        //Cerrar ventana
         JOptionPane.showMessageDialog(null, "Se tomará la versión más reciente para restaurar.");
         res = ordenada.get(0);
     }//GEN-LAST:event_formWindowClosing
 
     private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTree1ValueChanged
         // TODO add your handling code here:
+        //Selección de nodo
         Object [] nodes = evt.getPath().getPath();
         for (Object nodo : nodes){
             for (int i = 0; i < encriptada.size(); i++){
@@ -310,6 +358,7 @@ public class Lista extends javax.swing.JDialog {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        //Botón encriptar
         if (res == null){
             JOptionPane.showMessageDialog(null, "No se ha elegido ninguna opción");
         }else{
@@ -355,11 +404,13 @@ public class Lista extends javax.swing.JDialog {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
+        //Botón salir
         System.exit(0);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+        //Botón desencriptar
         if (res != null){
             Fechas fec = res;
             try {
@@ -394,6 +445,54 @@ public class Lista extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, "No se ha elegido ninguna opción");
         }
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+        //Botón eliminar
+        int i = JOptionPane.showConfirmDialog(null, "¿Quiere borrar la copia de seguridad hecha?");
+        if ((res != null) && (i == 0)){
+            Fechas fec = res;
+            StringTokenizer token = new StringTokenizer(copia(), "/");
+            String day = token.nextToken();
+            String hour = token.nextToken();
+            String install = System.getProperty("user.home") + "\\Desktop\\Copia Minecraft\\" + day + "\\" + hour;
+            File mine = new File(install + "\\.minecraft");
+            File crypt = new File(install + "\\data.dat");
+            if (mine.exists()){
+                borrarFichero(mine);
+                mine.delete();
+            }
+            if (crypt.exists()){
+                crypt.delete();
+            }
+            File carpet1 = new File(install);
+            if (carpet1.exists() && carpet1.isDirectory()){
+                carpet1.delete();
+            }
+            File carpet2 = new File(System.getProperty("user.home") + "\\Desktop\\Copia Minecraft\\" + day);
+            if(carpet2.exists() && carpet2.isDirectory()){
+                carpet2.delete();
+            }
+            if (encriptada.contains(fec)){
+                encriptada.remove(fec);
+            } else if (decriptada.contains(fec)){
+                decriptada.remove(fec);
+            }
+            update();
+        } else if (res == null){
+            JOptionPane.showMessageDialog(null, "No se ha seleccionado ninguna opción");
+        }
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        // TODO add your handling code here:
+        //Botón eliminar todas
+        int i = JOptionPane.showConfirmDialog(null, "¿Está seguro de que quiere eliminar TODAS las copias de seguridad? (La operación es irreversible)");
+        if (i == 0){
+            String install = System.getProperty("user.home") + "\\Desktop\\Copia Minecraft";
+            borrarFichero(new File(install));
+        }
+    }//GEN-LAST:event_jButton7ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -443,8 +542,12 @@ public class Lista extends javax.swing.JDialog {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
 }

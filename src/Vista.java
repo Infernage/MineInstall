@@ -23,6 +23,7 @@ public class Vista extends javax.swing.JFrame {
      */
     public Vista() {
         initComponents();
+        jButton6.setVisible(false);
         jButton4.setVisible(false);
         jProgressBar1.setVisible(false);
     }
@@ -38,8 +39,8 @@ public class Vista extends javax.swing.JFrame {
         jButton2.setVisible(false);
         jButton5.setEnabled(false);
         jButton5.setVisible(false);
-        jButton6.setEnabled(false);
-        jButton6.setVisible(false);
+        //jButton6.setEnabled(false);
+        //jButton6.setVisible(false);
     }
     //Botón desinstalar que ejecuta Unworker
     private void uninstall() {
@@ -101,7 +102,7 @@ public class Vista extends javax.swing.JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
-        jButton3.setBounds(230, 60, 160, 23);
+        jButton3.setBounds(0, 70, 160, 23);
         jLayeredPane1.add(jButton3, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jButton4.setText("Finalizar");
@@ -120,7 +121,7 @@ public class Vista extends javax.swing.JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
-        jButton5.setBounds(0, 40, 100, 23);
+        jButton5.setBounds(0, 30, 100, 23);
         jLayeredPane1.add(jButton5, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jButton2.setText("Instalar");
@@ -133,6 +134,7 @@ public class Vista extends javax.swing.JFrame {
         jLayeredPane1.add(jButton2, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jButton6.setText("Restaurar");
+        jButton6.setEnabled(false);
         jButton6.setBounds(0, 80, 90, 23);
         jLayeredPane1.add(jButton6, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
