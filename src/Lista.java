@@ -99,7 +99,12 @@ public class Lista extends javax.swing.JDialog {
     }
     public String copia(){
         //Llamada del SwingWorker para recoger el nombre elegido
-        StringBuilder str = new StringBuilder().append(res.dia).append("_").append(res.mes).append("_").append(res.año).append("/").append(res.hora).append(";").append(res.minuto).append(";").append(res.segundo).append("-").append(res.mili);
+        StringBuilder str = null;
+        if (res != null){
+            str = new StringBuilder().append(res.dia).append("_").append(res.mes).append("_").append(res.año).append("/").append(res.hora).append(";").append(res.minuto).append(";").append(res.segundo).append("-").append(res.mili);
+        } else{
+            str = new StringBuilder().append("null");
+        }
         return str.toString();
     }
     private void ordenar(){
@@ -405,7 +410,8 @@ public class Lista extends javax.swing.JDialog {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
         //Botón salir
-        System.exit(0);
+        res = null;
+        this.setVisible(false);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed

@@ -18,7 +18,7 @@ public class Worker extends SwingWorker <String, Integer>{
     private JButton bot, bot1;
     private boolean direct, exito = true;
     private Calendar C;
-    private JFrame fr;
+    private Vista fr;
     //Constructor del SwingWorker
     public Worker (JLabel lab, JProgressBar pro, JButton boton, JButton boton1, boolean temp){
         eti = lab;
@@ -47,11 +47,11 @@ public class Worker extends SwingWorker <String, Integer>{
             borrarData(del);
         }
         if (fichdst.isDirectory() && fichdst.exists()){
-            int i = JOptionPane.showConfirmDialog(null, "Minecraft ya está instalado en su sistema. ¿Desea desinstalarlo?\n(Se realiza copia de seguridad)");
+            int i = JOptionPane.showConfirmDialog(null, "Minecraft ya está instalado en su sistema. ¿Desea realizar una copia de seguridad?");
+            File copiaDel = new File(user + "\\.minecraft");
             if (i == 0){
                 StringBuilder str = new StringBuilder().append(C.get(Calendar.DAY_OF_MONTH)).append("_").append(C.get(Calendar.MONTH) + 1).append("_").append(C.get(Calendar.YEAR));
                 StringBuilder sts = new StringBuilder().append(C.get(Calendar.HOUR_OF_DAY)).append(";").append(C.get(Calendar.MINUTE)).append(";").append(C.get(Calendar.SECOND)).append("-").append(C.get(Calendar.MILLISECOND));
-                File copiaDel = new File(user + "\\.minecraft");
                 File copia = new File (System.getProperty("user.home") + "\\Desktop\\Copia Minecraft\\" + str.toString() + "\\" + sts.toString());
                 File zip = new File(copia.getAbsolutePath() + "\\data.dat");
                 if (copia.exists()){
@@ -101,14 +101,23 @@ public class Worker extends SwingWorker <String, Integer>{
                     eti.setText("No se ha podido desinstalar Minecraft. Cancelando...");
                     this.cancel(true);
                     JOptionPane.showMessageDialog(null, "Asegúrate de no tener ningún proceso que esté usando la carpeta de Minecraft.");
+                    return null;
                 }
                 copiaDel = null;
-            } else if(i == 1){
-                eti.setText("No se puede continuar la instalación.");
-                this.cancel(true);
+            } else if (i == 1){
+                borrarFichero(copiaDel);
+                if (copiaDel.delete()){
+                    eti.setText("Minecraft desinstalado con éxito.");
+                    Thread.sleep(1000);
+                } else{
+                    eti.setText("No se ha podido desinstalar Minecraft. Cancelando...");
+                    this.cancel(true);
+                    JOptionPane.showMessageDialog(null, "Asegúrate de no tener ningún proceso que esté usando la carpeta de Minecraft.");
+                    return null;
+                }
             } else if (i == 2){
-                eti.setText("Operación cancelada por el usuario.");
                 this.cancel(true);
+                return null;
             }
         }
         eti.setText("Instalando Minecraft 1.2.5 ...");
@@ -156,34 +165,23 @@ public class Worker extends SwingWorker <String, Integer>{
         return res;
     }
     //Añadir el JFrame
-    public void add (JFrame fa){
+    public void add (Vista fa){
         fr = fa;
     }
     //Cuando termina, salta este método
     protected void done() {
         fr.setVisible(true);
-        if (exito){
+        if (exito && !this.isCancelled()){
             eti.setText("Minecraft instalado con éxito en " + System.getProperty("user.home") + "\\AppData\\Roaming\\.minecraft");
             bot.setVisible(true);
             bot.setEnabled(true);
             prog.setValue(100);
             bot1.setVisible(false);
-        } else{
+        } else if (!exito){
             eti.setText("Minecraft no ha podido ser instalado.");
+        } else if (this.isCancelled()){
+            fr.retry();
         }
-    }
-    //Se usa cuando se llama al método publish()
-    /*protected void process(List<Integer> chunks){
-        for (int i = 0; i < chunks.size(); i++){
-            if (i != 0){
-                prog.setValue((chunks.get(0)));
-            }
-        }
-    }*/
-    //Cuando se pulsa el botón cancelar, se cancela la instalación (ARREGLAR)
-    private void cancelar(){
-        eti.setText("Cancelando...");
-        this.cancel(true);
     }
     //Copiar directorio de un sitio a otro
     private void copyDirectory(File srcDir, File dstDir) throws IOException {

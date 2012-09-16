@@ -83,9 +83,6 @@
   <SubComponents>
     <Component class="javax.swing.JButton" name="jButton1">
       <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="C:\Archivos\Minecraft\150-iconos-png-2\150-iconos-png\24-arrow-back.png"/>
-        </Property>
         <Property name="text" type="java.lang.String" value="Restaurar"/>
         <Property name="toolTipText" type="java.lang.String" value="Restaurar elemento seleccionado"/>
       </Properties>
@@ -95,9 +92,6 @@
     </Component>
     <Component class="javax.swing.JButton" name="jButton2">
       <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="C:\Archivos\Minecraft\150-iconos-png-2\150-iconos-png\24-arrow-first.png"/>
-        </Property>
         <Property name="text" type="java.lang.String" value="M&#xe1;s reciente"/>
         <Property name="toolTipText" type="java.lang.String" value="Seleccionar elemento m&#xe1;s reciente"/>
       </Properties>

@@ -18,16 +18,29 @@ import java.util.logging.Logger;
 public class Vista extends javax.swing.JFrame {
     private Worker work;
     private Unworker unwork;
+    private Restore restau;
     /**
      * Creates new form Vista
      */
     public Vista() {
         initComponents();
-        jButton6.setVisible(false);
         jButton4.setVisible(false);
         jProgressBar1.setVisible(false);
     }
-    
+    public void retry(){
+        jProgressBar1.setVisible(false);
+        jButton1.setVisible(true);
+        jButton1.setEnabled(true);
+        jButton2.setEnabled(true);
+        jButton2.setVisible(true);
+        jButton4.setVisible(false);
+        jButton4.setEnabled(false);
+        jButton5.setEnabled(true);
+        jButton5.setVisible(true);
+        jButton6.setEnabled(true);
+        jButton6.setVisible(true);
+        jLabel2.setText("");
+    }
     //Creamos el SwingWorker que trabajará en segundo plano. Y lo ejecutamos
     private void install(boolean direct){
         jProgressBar1.setVisible(true);
@@ -39,14 +52,28 @@ public class Vista extends javax.swing.JFrame {
         jButton2.setVisible(false);
         jButton5.setEnabled(false);
         jButton5.setVisible(false);
-        //jButton6.setEnabled(false);
-        //jButton6.setVisible(false);
+        jButton6.setEnabled(false);
+        jButton6.setVisible(false);
     }
     //Botón desinstalar que ejecuta Unworker
     private void uninstall() {
         jProgressBar1.setVisible(true);
         unwork = new Unworker(jLabel2, jProgressBar1, jButton4, jButton1, this);
         unwork.execute();
+        jButton1.setEnabled(false);
+        jButton2.setEnabled(false);
+        jButton2.setVisible(false);
+        jButton5.setEnabled(false);
+        jButton5.setVisible(false);
+        jButton6.setEnabled(false);
+        jButton6.setVisible(false);
+    }
+    
+    //Botón restaurar que ejecuta el restaurador
+    private void restauring(){
+        jProgressBar1.setVisible(true);
+        restau = new Restore(this, jLabel2, jProgressBar1, jButton4, jButton1);
+        restau.execute();
         jButton1.setEnabled(false);
         jButton2.setEnabled(false);
         jButton2.setVisible(false);
@@ -102,7 +129,7 @@ public class Vista extends javax.swing.JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
-        jButton3.setBounds(0, 70, 160, 23);
+        jButton3.setBounds(230, 60, 160, 23);
         jLayeredPane1.add(jButton3, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jButton4.setText("Finalizar");
@@ -121,7 +148,7 @@ public class Vista extends javax.swing.JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
-        jButton5.setBounds(0, 30, 100, 23);
+        jButton5.setBounds(0, 40, 100, 23);
         jLayeredPane1.add(jButton5, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jButton2.setText("Instalar");
@@ -134,7 +161,11 @@ public class Vista extends javax.swing.JFrame {
         jLayeredPane1.add(jButton2, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jButton6.setText("Restaurar");
-        jButton6.setEnabled(false);
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
         jButton6.setBounds(0, 80, 90, 23);
         jLayeredPane1.add(jButton6, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -213,6 +244,11 @@ public class Vista extends javax.swing.JFrame {
         //Botón desinstalar
         uninstall();
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+        restauring();
+    }//GEN-LAST:event_jButton6ActionPerformed
 
     /**
      * @param args the command line arguments
