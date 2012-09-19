@@ -28,29 +28,51 @@ public class Unworker extends SwingWorker<Integer, Integer>{
     }
     @Override
     protected Integer doInBackground() throws Exception {
-        Thread.sleep(3000);
+        Thread.sleep(1000);
         //Desinstalación
         pro.setValue(30);
         eti.setText("Preparando desinstalación...");
-        Thread.sleep(5000);
-        File mine = new File(System.getProperty("user.home") + "\\AppData\\Roaming\\.minecraft");
-        if (mine.exists() && mine.isDirectory()){
-            borrarFichero(mine);
-            eti.setText("Minecraft desinstalado con éxito.");
-            pro.setValue(50);
+        Thread.sleep(3000);
+        if (Vista.OS.equals("windows")){
+            File mine = new File(System.getProperty("user.home") + "\\AppData\\Roaming\\.minecraft");
+            if (mine.exists() && mine.isDirectory()){
+                borrarFichero(mine);
+                eti.setText("Minecraft desinstalado con éxito.");
+                pro.setValue(50);
+                Thread.sleep(2000);
+                mine.deleteOnExit();
+            }
+            eti.setText("Recopilando información adicional...");
+            Thread.sleep(5000);
+            for (int i = 50; i < 90; i++){
+                pro.setValue(i+1);
+                Thread.sleep(100);
+            }
             Thread.sleep(2000);
-            mine.deleteOnExit();
-        }
-        eti.setText("Recopilando información adicional...");
-        Thread.sleep(5000);
-        for (int i = 50; i < 90; i++){
-            pro.setValue(i+1);
-            Thread.sleep(100);
-        }
-        Thread.sleep(2000);
-        File exec = new File(System.getProperty("user.home") + "\\Desktop\\RunMinecraft.bat");
-        if (exec.exists()){//Si existe el acceso directo, lo borramos
-            exec.delete();
+            File exec = new File(System.getProperty("user.home") + "\\Desktop\\RunMinecraft.bat");
+            if (exec.exists()){//Si existe el acceso directo, lo borramos
+                exec.delete();
+            }
+        } else if (Vista.OS.equals("linux")){
+            File mine = new File(System.getProperty("user.home") + "/.minecraft");
+            if (mine.exists() && mine.isDirectory()){
+                borrarFichero(mine);
+                eti.setText("Minecraft desinstalado con éxito.");
+                pro.setValue(50);
+                Thread.sleep(2000);
+                mine.deleteOnExit();
+            }
+            eti.setText("Recopilando información adicional...");
+            Thread.sleep(5000);
+            for (int i = 50; i < 90; i++){
+                pro.setValue(i+1);
+                Thread.sleep(100);
+            }
+            Thread.sleep(2000);
+            File exec = new File(System.getProperty("user.home") + "/Desktop/RunMinecraft.sh");
+            if (exec.exists()){//Si existe el acceso directo, lo borramos
+                exec.delete();
+            }
         }
         eti.setText("Minecraft desinstalado con éxito!");
         return 0;

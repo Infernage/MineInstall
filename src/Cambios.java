@@ -15,7 +15,10 @@ public class Cambios extends javax.swing.JDialog {
     public Cambios(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        jTextArea1.setText("Instalador 3.1.0\n-Cambiado Changelog. Ahora no hay que pulsar el botón para acceder a la ventana.\n-Actualizado FAQ.\n-Cambiado el funcionamiento del instalador.\n-De vuelta el actualizador! Ya no hay necesidad de estar atento a la página para descargar la última versión.");
+        jTextArea1.setText("Instalador 3.1.1\n-Arreglado ejecución, tanto del instalador como del login"
+                + ", en otros sistemas operativos.\n-Cambiado y optimizado el sistema de restauración."
+                + " Ahora, existe un botón para restaurar únicamente.\n-Cambiado sistema de instalación. "
+                + "Ahora pregunta si se quiere hacer copia de seguridad o no.\n-");
     }
 
     /**

@@ -2,6 +2,7 @@
 import javax.swing.WindowConstants;
 import javax.swing.*;
 import java.io.*;
+import java.util.StringTokenizer;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,18 +17,25 @@ import java.util.logging.Logger;
  * @author Reed
  */
 public class Vista extends javax.swing.JFrame {
-    private Worker work;
-    private Unworker unwork;
-    private Restore restau;
+    private Worker work;//Installer
+    private Unworker unwork;//Uninstaller
+    private Restore restau;//Restorer
+    public static String OS = System.getProperty("os.name");//Operative system
     /**
      * Creates new form Vista
      */
     public Vista() {
+        System.out.println("Executing with " + OS);
+        StringTokenizer token = new StringTokenizer(OS, " ");
+        OS = token.nextToken().toLowerCase();
+        token = null;
         initComponents();
         jButton4.setVisible(false);
         jProgressBar1.setVisible(false);
     }
+    //Método de cancelación
     public void retry(){
+        System.out.println("Cancelled");
         jProgressBar1.setVisible(false);
         jButton1.setVisible(true);
         jButton1.setEnabled(true);
@@ -213,6 +221,7 @@ public class Vista extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         //Creación de la ventana de Changelog
+        System.out.println("Opening changelog");
         Cambios c = new Cambios (this, true);
         c.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         c.setTitle("Changelog");
@@ -224,29 +233,35 @@ public class Vista extends javax.swing.JFrame {
         // TODO add your handling code here:
         //Ejecutar instalación
         boolean direct = jCheckBox1.isSelected();
+        System.out.println("Installing...");
         install(direct);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         //Botón Finalizar
+        System.out.println("Exiting");
         System.exit(0);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         //Botón Salir
+        System.out.println("Exiting");
         System.exit(0);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
         //Botón desinstalar
+        System.out.println("Uninstalling...");
         uninstall();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
+        //Botón restaurar
+        System.out.println("Opening restauring system");
         restauring();
     }//GEN-LAST:event_jButton6ActionPerformed
 

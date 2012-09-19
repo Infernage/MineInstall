@@ -43,73 +43,144 @@ public class Restore extends SwingWorker<Integer, Integer>{
     @Override
     protected Integer doInBackground() throws Exception {
         //Cogemos la base de datos de las copias de seguridad
-        File copia = new File(System.getProperty("user.home") + "\\Desktop\\Copia Minecraft");
-        ficheros(copia);//Listamos los ficheros que haya en copia
-        Lista vist = new Lista(fr, true, fich);//Creamos un Dialog para ver por cual restauramos
-        vist.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
-        vist.setTitle("Minecraft recovery");
-        vist.setLocationRelativeTo(null);
-        vist.setVisible(true);
-        String fi = vist.copia(); //Obtenemos la seleccionada
-        if (fi.equals("null")){
-            this.cancel(true);
-            return 0;
-        }
-        StringTokenizer token = new StringTokenizer (fi, "/"); //Separamos la carpeta fecha de la carpeta hora
-        String dia = token.nextToken();
-        String hora = token.nextToken();
-        token = null;
-        rest = new File(copia.getAbsolutePath() + "\\" + dia + "\\" + hora + "\\.minecraft"); //Aplicamos el path del antiguo sistema
-        newRest = new File(copia.getAbsolutePath() + "\\" + dia + "\\" + hora + "\\data.dat"); //Aplicamos el path del nuevo sistema
-        pro.setValue(10);
-        int temp = 0;
-        if (!rest.exists() && !newRest.exists()){//Si las carpetas no existe, saltamos con error
-            JOptionPane.showMessageDialog(null, "Error, no se ha podido encontrar la restauración.");
-            eti.setText("Error inesperado al recuperar el archivo.");
-            this.cancel(true);
-        } else if (rest.exists() && !newRest.exists()){
-            temp = 1;
-        } else {
-            temp = 2;
-        }
-        eti.setText("Preparando desinstalación...");
-        Thread.sleep(3000);
-        File mine = new File(System.getProperty("user.home") + "\\AppData\\Roaming\\.minecraft");
-        if (mine.exists() && mine.isDirectory()){
-            borrarFichero(mine);//Borramos el Minecraft instalado
-            eti.setText("Minecraft desinstalado con éxito.");
-            pro.setValue(50);
-            Thread.sleep(2000);
-            eti.setText("Restaurando copia de seguridad de Minecraft...");
-            Thread.sleep(1000);
-        }
-        if (temp == 1){
-            mine.mkdirs();
-            copyDirectory(rest, mine);//Instalamos la restauración
-        } else if (temp == 2){
-            //Instalamos la restauración
-            ZipFile dat = new ZipFile(newRest);
-            if (dat.isEncrypted()){
-                dat.setPassword("Minelogin 3.0.0");
+        if (Vista.OS.equals("windows")){
+            File copia = new File(System.getProperty("user.home") + "\\Desktop\\Copia Minecraft");
+            ficheros(copia);//Listamos los ficheros que haya en copia
+            Lista vist = new Lista(fr, true, fich);//Creamos un Dialog para ver por cual restauramos
+            vist.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
+            vist.setTitle("Minecraft recovery");
+            vist.setLocationRelativeTo(null);
+            vist.setVisible(true);
+            String fi = vist.copia(); //Obtenemos la seleccionada
+            if (fi.equals("null")){
+                this.cancel(true);
+                return 0;
             }
-            dat.extractAll(System.getProperty("user.home") + "\\AppData\\Roaming");
-        }
-        eti.setText("Recopilando información adicional...");
-        Thread.sleep(3000);
-        for (int i = 50; i < 90; i++){
-            pro.setValue(i+1);
-            Thread.sleep(100);
-        }
-        File exec = new File(System.getProperty("user.home") + "\\Desktop\\RunMinecraft.bat");
-        if(!exec.exists()){//Comprobamos si existe acceso directo
-            exec.createNewFile();
-            PrintWriter pw = new PrintWriter (exec);
-            pw.print("echo Loading Minecraft...");
-            pw.println();
-            pw.print("@echo off");
-            pw.println();
-            pw.print("java -jar " + System.getProperty("user.home") + "\\AppData\\Roaming\\.minecraft\\RUN.jar");
-            pw.close();
+            StringTokenizer token = new StringTokenizer (fi, "/"); //Separamos la carpeta fecha de la carpeta hora
+            String dia = token.nextToken();
+            String hora = token.nextToken();
+            token = null;
+            rest = new File(copia.getAbsolutePath() + "\\" + dia + "\\" + hora + "\\.minecraft"); //Aplicamos el path del antiguo sistema
+            newRest = new File(copia.getAbsolutePath() + "\\" + dia + "\\" + hora + "\\data.dat"); //Aplicamos el path del nuevo sistema
+            pro.setValue(10);
+            int temp = 0;
+            if (!rest.exists() && !newRest.exists()){//Si las carpetas no existe, saltamos con error
+                JOptionPane.showMessageDialog(null, "Error, no se ha podido encontrar la restauración.");
+                eti.setText("Error inesperado al recuperar el archivo.");
+                this.cancel(true);
+            } else if (rest.exists() && !newRest.exists()){
+                temp = 1;
+            } else {
+                temp = 2;
+            }
+            eti.setText("Preparando desinstalación...");
+            Thread.sleep(3000);
+            File mine = new File(System.getProperty("user.home") + "\\AppData\\Roaming\\.minecraft");
+            if (mine.exists() && mine.isDirectory()){
+                borrarFichero(mine);//Borramos el Minecraft instalado
+                eti.setText("Minecraft desinstalado con éxito.");
+                pro.setValue(50);
+                Thread.sleep(2000);
+                eti.setText("Restaurando copia de seguridad de Minecraft...");
+                Thread.sleep(1000);
+            }
+            if (temp == 1){
+                mine.mkdirs();
+                copyDirectory(rest, mine);//Instalamos la restauración
+            } else if (temp == 2){
+                //Instalamos la restauración
+                ZipFile dat = new ZipFile(newRest);
+                if (dat.isEncrypted()){
+                    dat.setPassword("Minelogin 3.0.0");
+                }
+                dat.extractAll(System.getProperty("user.home") + "\\AppData\\Roaming");
+            }
+            eti.setText("Recopilando información adicional...");
+            Thread.sleep(3000);
+            for (int i = 50; i < 90; i++){
+                pro.setValue(i+1);
+                Thread.sleep(100);
+            }
+            File exec = new File(System.getProperty("user.home") + "\\Desktop\\RunMinecraft.bat");
+            if(!exec.exists()){//Comprobamos si existe acceso directo
+                exec.createNewFile();
+                PrintWriter pw = new PrintWriter (exec);
+                pw.print("echo Loading Minecraft...");
+                pw.println();
+                pw.print("@echo off");
+                pw.println();
+                pw.print("java -jar " + System.getProperty("user.home") + "\\AppData\\Roaming\\.minecraft\\RUN.jar");
+                pw.close();
+            }
+        } else if (Vista.OS.equals("linux")){
+            File copia = new File(System.getProperty("user.home") + "/Desktop/Copia Minecraft");
+            ficheros(copia);//Listamos los ficheros que haya en copia
+            Lista vist = new Lista(fr, true, fich);//Creamos un Dialog para ver por cual restauramos
+            vist.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
+            vist.setTitle("Minecraft recovery");
+            vist.setLocationRelativeTo(null);
+            vist.setVisible(true);
+            String fi = vist.copia(); //Obtenemos la seleccionada
+            if (fi.equals("null")){
+                this.cancel(true);
+                return 0;
+            }
+            StringTokenizer token = new StringTokenizer (fi, "/"); //Separamos la carpeta fecha de la carpeta hora
+            String dia = token.nextToken();
+            String hora = token.nextToken();
+            token = null;
+            rest = new File(copia.getAbsolutePath() + "/" + dia + "/" + hora + "/.minecraft"); //Aplicamos el path del antiguo sistema
+            newRest = new File(copia.getAbsolutePath() + "/" + dia + "/" + hora + "/data.dat"); //Aplicamos el path del nuevo sistema
+            pro.setValue(10);
+            int temp = 0;
+            if (!rest.exists() && !newRest.exists()){//Si las carpetas no existe, saltamos con error
+                JOptionPane.showMessageDialog(null, "Error, no se ha podido encontrar la restauración.");
+                eti.setText("Error inesperado al recuperar el archivo.");
+                this.cancel(true);
+            } else if (rest.exists() && !newRest.exists()){
+                temp = 1;
+            } else {
+                temp = 2;
+            }
+            eti.setText("Preparando desinstalación...");
+            Thread.sleep(3000);
+            File mine = new File(System.getProperty("user.home") + "/.minecraft");
+            if (mine.exists() && mine.isDirectory()){
+                borrarFichero(mine);//Borramos el Minecraft instalado
+                eti.setText("Minecraft desinstalado con éxito.");
+                pro.setValue(50);
+                Thread.sleep(2000);
+                eti.setText("Restaurando copia de seguridad de Minecraft...");
+                Thread.sleep(1000);
+            }
+            if (temp == 1){
+                mine.mkdirs();
+                copyDirectory(rest, mine);//Instalamos la restauración
+            } else if (temp == 2){
+                //Instalamos la restauración
+                ZipFile dat = new ZipFile(newRest);
+                if (dat.isEncrypted()){
+                    dat.setPassword("Minelogin 3.0.0");
+                }
+                dat.extractAll(System.getProperty("user.home"));
+            }
+            eti.setText("Recopilando información adicional...");
+            Thread.sleep(3000);
+            for (int i = 50; i < 90; i++){
+                pro.setValue(i+1);
+                Thread.sleep(100);
+            }
+            File exec = new File(System.getProperty("user.home") + "/Desktop/RunMinecraft.sh");
+            if(!exec.exists()){//Comprobamos si existe acceso directo
+                exec.createNewFile();
+                PrintWriter pw = new PrintWriter (exec);
+                pw.print("echo Loading Minecraft...");
+                pw.println();
+                pw.print("@echo off");
+                pw.println();
+                pw.print("java -jar " + System.getProperty("user.home") + "/.minecraft/RUN.jar");
+                pw.close();
+            }
         }
         eti.setText("Minecraft restaurado con éxito!");
         return 0;
