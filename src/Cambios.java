@@ -15,13 +15,7 @@ public class Cambios extends javax.swing.JDialog {
     public Cambios(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        jTextArea1.setText("Instalador 3.1.1\n-Arreglado ejecución, tanto del instalador como del login"
-                + ", en otros sistemas operativos.\n-Cambiado y optimizado el sistema de restauración."
-                + " Ahora, existe un botón para restaurar únicamente.\n-Cambiado sistema de instalación. "
-                + "Ahora pregunta si se quiere hacer copia de seguridad o no.\n-Arreglado actualizador."
-                + " Ahora descarga correctamente la nueva versión y no una imagen.\n-Cambiado formato del"
-                + " changelog del login. Ahora, por comodidad, estarán únicamente los cambios realizados"
-                + " del minecraft.\n-Cambiado repertorio de mods para el servidor.");
+        jTextArea1.setText("Instalador VX.X.X\nObsoleto, nuevas versiones serán anunciadas en MineClient.");
     }
 
     /**
